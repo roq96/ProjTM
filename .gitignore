@@ -1,0 +1,15 @@
+.env
+*.log
+*.err
+*.xlsx
+*.xls
+*.csv
+*.tsv
+*.tmp
+*.pyc
+__pycache__/
+.run/
+.verify/
+local-run-*/
+diag-*/
+local-*.txt

