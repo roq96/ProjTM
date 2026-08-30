@@ -8,12 +8,12 @@ permissions:
 
 concurrency:
   group: a
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   task:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v4
