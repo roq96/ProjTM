@@ -85,7 +85,7 @@ jobs:
           CFG_13: ${{ secrets.CFG_13 }}
           CFG_14: ${{ secrets.CFG_14 }}
           CFG_17: ${{ secrets.CFG_17 }}
-          CFG_19: ${{ secrets.CFG_19 }}
+          CFG_18: ${{ secrets.CFG_18 }}
           CFG_20: ${{ secrets.CFG_20 }}
 
       - name: save
