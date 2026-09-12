@@ -15,3 +15,4 @@ __pycache__/
 local-run-*/
 diag-*/
 local-*.txt
+descargar_bitacora_subestados_temis.py
