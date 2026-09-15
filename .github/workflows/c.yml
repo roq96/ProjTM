@@ -2,6 +2,11 @@ name: c
 
 on:
   workflow_dispatch:
+    inputs:
+      bootstrap_drive_cache:
+        description: "Solo sembrar/reconstruir la cache de Drive desde Supabase (no descarga de Temis)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -65,6 +70,7 @@ jobs:
         env:
           K: ${{ secrets.KEY_C }}
           RUN_ONCE: "true"
+          BOOTSTRAP_DRIVE_CACHE: ${{ inputs.bootstrap_drive_cache }}
           CFG_01: ${{ secrets.CFG_01 }}
           CFG_02: ${{ secrets.CFG_02 }}
           CFG_03: ${{ secrets.CFG_03 }}
