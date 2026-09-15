@@ -2,6 +2,11 @@ name: b
 
 on:
   workflow_dispatch:
+    inputs:
+      selftest_drive_cache:
+        description: "Solo probar la lectura de la cache de Drive (no corre b completo)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -70,6 +75,7 @@ jobs:
         env:
           K: ${{ secrets.KEY_B }}
           RUN_ONCE: "true"
+          SELFTEST_DRIVE_CACHE: ${{ inputs.selftest_drive_cache }}
           CFG_01: ${{ secrets.CFG_01 }}
           CFG_02: ${{ secrets.CFG_02 }}
           CFG_03: ${{ secrets.CFG_03 }}
