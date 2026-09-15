@@ -71,6 +71,7 @@ jobs:
           K: ${{ secrets.KEY_C }}
           RUN_ONCE: "true"
           BOOTSTRAP_DRIVE_CACHE: ${{ inputs.bootstrap_drive_cache }}
+          GDRIVE_BITACORA_CACHE_FILE_ID: "1Qy16zYvY8kP3w5aG43Vp-ZLWqBnYk3G7"
           CFG_01: ${{ secrets.CFG_01 }}
           CFG_02: ${{ secrets.CFG_02 }}
           CFG_03: ${{ secrets.CFG_03 }}

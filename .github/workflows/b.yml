@@ -87,6 +87,7 @@ jobs:
           CFG_17: ${{ secrets.CFG_17 }}
           CFG_18: ${{ secrets.CFG_18 }}
           CFG_20: ${{ secrets.CFG_20 }}
+          GDRIVE_BITACORA_CACHE_FILE_ID: "1Qy16zYvY8kP3w5aG43Vp-ZLWqBnYk3G7"
 
       - name: save
         if: ${{ !success() }}
