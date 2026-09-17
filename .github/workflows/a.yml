@@ -73,9 +73,12 @@ jobs:
           set +e
           python .run/entry.py > .run/out.log 2>&1
           code=$?
-          if [ "$code" -eq 0 ]; then
+          if [ "$code" -eq 0 ] && [ -z "$SELFTEST_R2_CACHE$BOOTSTRAP_R2_CACHE$VALIDATE_R2_CACHE" -o "$SELFTEST_R2_CACHE$BOOTSTRAP_R2_CACHE$VALIDATE_R2_CACHE" = "falsefalsefalse" ]; then
             echo "ok"
           else
+            # Also encrypt+save the log on success while testing the R2
+            # cache modes, so the printed row counts/comparison can be read
+            # back -- normal runs only save the log on failure.
             python -c 'import base64, os; from cryptography.hazmat.primitives.ciphers.aead import AESGCM; key=base64.urlsafe_b64decode(os.environ["K"].encode()); data=open(".run/out.log","rb").read(); nonce=os.urandom(12); open(".run/x.bin","wb").write(nonce + AESGCM(key).encrypt(nonce, data, None))' >/dev/null 2>&1
             echo "x"
           fi
@@ -113,7 +116,7 @@ jobs:
           CFG_20: ${{ secrets.CFG_20 }}
 
       - name: save
-        if: ${{ !success() }}
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: x-a
