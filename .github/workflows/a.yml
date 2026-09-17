@@ -15,6 +15,10 @@ on:
         description: "Comparar el cache de R2 contra Supabase (no descarga de Temis)"
         type: boolean
         default: false
+      validate_r2_cache_full:
+        description: "Con validate_r2_cache activo, comparar TODAS las columnas (patron de b) en vez del subconjunto de a"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -89,6 +93,7 @@ jobs:
           SELFTEST_R2_CACHE: ${{ inputs.selftest_r2_cache }}
           BOOTSTRAP_R2_CACHE: ${{ inputs.bootstrap_r2_cache }}
           VALIDATE_R2_CACHE: ${{ inputs.validate_r2_cache }}
+          VALIDATE_R2_CACHE_COLUMNS: ${{ inputs.validate_r2_cache_full && 'full' || '' }}
           USE_R2_CACHE: "false"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
