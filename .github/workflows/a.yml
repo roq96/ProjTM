@@ -94,7 +94,7 @@ jobs:
           BOOTSTRAP_R2_CACHE: ${{ inputs.bootstrap_r2_cache }}
           VALIDATE_R2_CACHE: ${{ inputs.validate_r2_cache }}
           VALIDATE_R2_CACHE_COLUMNS: ${{ inputs.validate_r2_cache_full && 'full' || '' }}
-          USE_R2_CACHE: "false"
+          USE_R2_CACHE: "true"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}

@@ -76,7 +76,7 @@ jobs:
           K: ${{ secrets.KEY_B }}
           RUN_ONCE: "true"
           SELFTEST_DRIVE_CACHE: ${{ inputs.selftest_drive_cache }}
-          USE_R2_CACHE: "false"
+          USE_R2_CACHE: "true"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
