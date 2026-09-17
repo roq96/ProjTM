@@ -76,6 +76,12 @@ jobs:
           K: ${{ secrets.KEY_B }}
           RUN_ONCE: "true"
           SELFTEST_DRIVE_CACHE: ${{ inputs.selftest_drive_cache }}
+          USE_R2_CACHE: "false"
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
           CFG_01: ${{ secrets.CFG_01 }}
           CFG_02: ${{ secrets.CFG_02 }}
           CFG_03: ${{ secrets.CFG_03 }}

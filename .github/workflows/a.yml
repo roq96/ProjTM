@@ -7,6 +7,14 @@ on:
         description: "Solo probar la lectura/escritura del cache de R2 (no corre a completo)"
         type: boolean
         default: false
+      bootstrap_r2_cache:
+        description: "Sembrar/reconstruir el cache de R2 desde Supabase (no descarga de Temis)"
+        type: boolean
+        default: false
+      validate_r2_cache:
+        description: "Comparar el cache de R2 contra Supabase (no descarga de Temis)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -76,6 +84,9 @@ jobs:
           K: ${{ secrets.KEY_A }}
           RUN_ONCE: "true"
           SELFTEST_R2_CACHE: ${{ inputs.selftest_r2_cache }}
+          BOOTSTRAP_R2_CACHE: ${{ inputs.bootstrap_r2_cache }}
+          VALIDATE_R2_CACHE: ${{ inputs.validate_r2_cache }}
+          USE_R2_CACHE: "false"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
