@@ -15,6 +15,14 @@ on:
         description: "OrdenTrabajoProveedorId a probar (default: 112916, OT CBCPAGE-0000138)"
         type: string
         default: "112916"
+      selftest_lookup_ot:
+        description: "Buscar proveedor/tipo en vivo para un Numero de OT (no corre b completo)"
+        type: boolean
+        default: false
+      selftest_lookup_ot_number:
+        description: "Numero de OT a buscar"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -73,7 +81,7 @@ jobs:
           set +e
           python .run/entry.py > .run/out.log 2>&1
           code=$?
-          if [ "$code" -eq 0 ] && [ -z "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC" -o "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC" = "falsefalse" ]; then
+          if [ "$code" -eq 0 ] && [ -z "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC$SELFTEST_LOOKUP_OT" -o "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC$SELFTEST_LOOKUP_OT" = "falsefalsefalse" ]; then
             echo "ok"
           else
             # Also encrypt+save the log on success while testing selftest
@@ -89,6 +97,8 @@ jobs:
           SELFTEST_DRIVE_CACHE: ${{ inputs.selftest_drive_cache }}
           SELFTEST_INITIAL_DOC: ${{ inputs.selftest_initial_doc }}
           SELFTEST_INITIAL_DOC_PROVIDER_ID: ${{ inputs.selftest_initial_doc_provider_id }}
+          SELFTEST_LOOKUP_OT: ${{ inputs.selftest_lookup_ot }}
+          SELFTEST_LOOKUP_OT_NUMBER: ${{ inputs.selftest_lookup_ot_number }}
           USE_R2_CACHE: "true"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
