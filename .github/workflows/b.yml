@@ -7,6 +7,14 @@ on:
         description: "Solo probar la lectura de la cache de Drive (no corre b completo)"
         type: boolean
         default: false
+      selftest_initial_doc:
+        description: "Probar 'Documentos Iniciales' para un solo OrdenTrabajoProveedorId (no corre b completo)"
+        type: boolean
+        default: false
+      selftest_initial_doc_provider_id:
+        description: "OrdenTrabajoProveedorId a probar (default: 112916, OT CBCPAGE-0000138)"
+        type: string
+        default: "112916"
 
 permissions:
   contents: read
@@ -65,9 +73,12 @@ jobs:
           set +e
           python .run/entry.py > .run/out.log 2>&1
           code=$?
-          if [ "$code" -eq 0 ]; then
+          if [ "$code" -eq 0 ] && [ -z "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC" -o "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC" = "falsefalse" ]; then
             echo "ok"
           else
+            # Also encrypt+save the log on success while testing selftest
+            # modes, so printed output can be read back -- normal runs only
+            # save the log on failure.
             python -c 'import base64, os; from cryptography.hazmat.primitives.ciphers.aead import AESGCM; key=base64.urlsafe_b64decode(os.environ["K"].encode()); data=open(".run/out.log","rb").read(); nonce=os.urandom(12); open(".run/x.bin","wb").write(nonce + AESGCM(key).encrypt(nonce, data, None))' >/dev/null 2>&1
             echo "x"
           fi
@@ -76,6 +87,8 @@ jobs:
           K: ${{ secrets.KEY_B }}
           RUN_ONCE: "true"
           SELFTEST_DRIVE_CACHE: ${{ inputs.selftest_drive_cache }}
+          SELFTEST_INITIAL_DOC: ${{ inputs.selftest_initial_doc }}
+          SELFTEST_INITIAL_DOC_PROVIDER_ID: ${{ inputs.selftest_initial_doc_provider_id }}
           USE_R2_CACHE: "true"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
@@ -102,7 +115,7 @@ jobs:
           GDRIVE_BITACORA_CACHE_FILE_ID: "1Qy16zYvY8kP3w5aG43Vp-ZLWqBnYk3G7"
 
       - name: save
-        if: ${{ !success() }}
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: x-b
