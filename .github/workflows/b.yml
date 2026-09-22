@@ -23,6 +23,10 @@ on:
         description: "Numero de OT a buscar"
         type: string
         default: ""
+      audit_documents_ot_list:
+        description: "Lista de Numero de OT separadas por coma (auditoria de documentos, no corre b completo)"
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -81,7 +85,7 @@ jobs:
           set +e
           python .run/entry.py > .run/out.log 2>&1
           code=$?
-          if [ "$code" -eq 0 ] && [ -z "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC$SELFTEST_LOOKUP_OT" -o "$SELFTEST_DRIVE_CACHE$SELFTEST_INITIAL_DOC$SELFTEST_LOOKUP_OT" = "falsefalsefalse" ]; then
+          if [ "$code" -eq 0 ] && [ "$SELFTEST_DRIVE_CACHE" != "true" ] && [ "$SELFTEST_INITIAL_DOC" != "true" ] && [ "$SELFTEST_LOOKUP_OT" != "true" ] && [ -z "$AUDIT_DOCUMENTS_OT_LIST" ]; then
             echo "ok"
           else
             # Also encrypt+save the log on success while testing selftest
@@ -99,6 +103,7 @@ jobs:
           SELFTEST_INITIAL_DOC_PROVIDER_ID: ${{ inputs.selftest_initial_doc_provider_id }}
           SELFTEST_LOOKUP_OT: ${{ inputs.selftest_lookup_ot }}
           SELFTEST_LOOKUP_OT_NUMBER: ${{ inputs.selftest_lookup_ot_number }}
+          AUDIT_DOCUMENTS_OT_LIST: ${{ inputs.audit_documents_ot_list }}
           USE_R2_CACHE: "true"
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
